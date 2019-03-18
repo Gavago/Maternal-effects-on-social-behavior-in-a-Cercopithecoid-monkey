@@ -38,7 +38,7 @@ fy.mj.gg.all<-gamlss(j.p.gg ~ z.(fy.mj.gg) + sex + z.(age)  + z.(m.rank.sp) +  z
 # Predict juvenile grooming with peers (other juveniles)
   # by mothers grooming with her peers (adult females)
 fy.gg.prs<-gamlss(p.gg.j ~ z.(fy.p.gg.af) + sex + z.(age)  + z.(m.rank.sp) +  z.(fy.p.gg.af)*sex+ random(mum) , family="BE",data=mjdf_ajp)
-  # by mother's groomin with juv as infant
+  # by mother's groomin with juvenile as infant
 fy.mj.gg.prs<-gamlss(p.gg.j ~ z.(fy.mj.gg) + sex + z.(age)  + z.(m.rank.sp) +  z.(fy.mj.gg)*sex + random(mum) , family="BE",data=mjdf_ajp)
 
 
@@ -52,7 +52,7 @@ fy.mj.rc.all<-gamlss(j.p.rc ~ z.(fy.mj.rc) + sex + z.(age)  + z.(m.rank.sp) +  z
 # Predict juvenile grooming with peers (other juveniles)
   # by mothers grooming with her peers (adult females)
 fy.rc.prs<-gamlss(p.rc.j ~ z.(fy.p.rc.af) + sex + z.(age)  + z.(m.rank.sp) +  z.(fy.p.rc.af)*sex+ random(mum) , family="BE",data=mjdf_ajp)
-  # by mother's groomin with juv as infant
+  # by mother's groomin with juvenile as infant
 fy.mj.rc.prs<-gamlss(p.rc.j ~ z.(fy.mj.rc) + sex + z.(age)  + z.(m.rank.sp) +  z.(fy.mj.rc)*sex + random(mum) , family="BE",data=mjdf_ajp)
 
 
@@ -66,7 +66,7 @@ fy.mj.pl.all<-gamlss(j.p.pl ~ z.(fy.mj.gg) + sex + z.(age)  + z.(m.rank.sp) +  z
 # Predict juvenile playing with peers (other juveniles)
   # by mothers grooming with her peers (adult females)
 fy.pl.prs<-gamlss(p.pl.j ~ z.(fy.p.gg.af) + sex + z.(age)  + z.(m.rank.sp) +  z.(fy.p.gg.af)*sex+ random(mum) , family="BEZI",data=mjdf_ajp, method=RS(50))
-  # by mother's groomin with juv as infant
+  # by mother's groomin with juvenile as infant
 fy.mj.pl.prs<-gamlss(p.pl.j ~ z.(fy.mj.gg) + sex + z.(age)  + z.(m.rank.sp) +  z.(fy.mj.gg)*sex + random(mum) , family="BE",data=mjdf_ajp)
 
 
@@ -97,7 +97,7 @@ for(j in seq(mods)){
 }
 mod_info
 
-# create function to identify where the influence of mum behavior on juvenile behavior is significant
+# create function to identify where the influence of mum behavior on juvenile behavior is significant and moderated by sex
 sig_int<-function(m){
   m1<-m[6,]
   sig<- m1$loCI > 0 & m1$upCI > 0 | m1$loCI < 0 & m1$upCI < 0
