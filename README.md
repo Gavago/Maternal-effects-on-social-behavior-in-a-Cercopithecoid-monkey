@@ -7,13 +7,14 @@ in special joint issue of American Journal of Primatology & Developmental Psycho
 Summary data on blue monkey subjects time affiliating with social partners as juveniles, their mothers' time affiliating averaged over each year of subject-offsprings' life, and mothers' time spent affiliating in subject offsprings' first year of life.
 
 Data dictionary:
-juv - subject name
+juv - subject name /n
 mum - subject’s mother’s name
 sex - subject sex
 age - age of subject in years at midpoint of juvenile observation period
 j.p.gg - % of total observation time (aka “time”) subject spent grooming with (grooming + groomed by) any social partner, excluding its mother, as a juvenile
 j.p.rc - time subject spent resting within 1 m or sitting in contact with any social partner, excluding its mother, as a juvenile
 j.p.pl- time subject spent playing with any social partner, excluding its mother, as a juvenile
+jm.gg - time subject spent grooming w mum as a juvenile
 p.gg.j - time subject spent grooming with (grooming + groomed by) juvenile peers
 p.rc.j - time subject spent resting within 1 m or sitting in contact with juvenile peers
 p.pl.j - time subject spent playing with juvenile peers
