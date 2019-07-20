@@ -35,6 +35,92 @@ dim(dat) # 142 9
 # ending 10-30 - last year fletcher (mum) alive
 # ending 04-09 - last year artemann (mum) alive
 
+######
+# Tables 1 & 2
+#######
+# Table 1 - Wilcoxon tests - Juv descriptive statistics  ----
+
+Mdf <- mjdf %>% filter(sex == "M")
+Fdf <- mjdf %>% filter(sex == "F")
+
+
+behavior <- c("1. near", "2. grooming", "3. playing")
+partner <- c("1. any partner", "2. peers", "3. mum")
+labels <- data.frame(behavior,partner) %>%
+  complete(partner,behavior)
+
+
+beh_to_test <- c("j.p.rc", "j.p.gg", "j.p.pl",
+                 "p.rc.j", "p.gg.j", "p.pl.j",
+                 "jm.rc", "jm.gg") #exclude jm.pl bc is 0
+
+w.test_output <- list()
+for(i in seq(beh_to_test)){
+  output <- unlist(wilcox.test(Fdf[,beh_to_test[i]], Mdf[,beh_to_test[i]])[c("statistic","p.value")])
+  output <- t(data.frame(output))
+  output[1] <- round(output[1],2)
+  output_df <- data.frame(labels[i,], output)
+  w.test_output[[i]] <- output_df
+}
+
+M_F_juv_diffs<- do.call("rbind", w.test_output) %>% arrange(behavior)
+M_F_juv_diffs$p.value <- p.adjust(M_F_juv_diffs$p.value, method ="BH") %>% round(.,2)
+M_F_juv_diffs[M_F_juv_diffs$p.value == 0, "p.value"] <- "< 0.001"
+M_F_juv_diffs
+
+# Table 2 - GAMs - Mum descriptive statistics ----
+
+mumF<-mjdf %>% filter(sex == "F") %>% distinct(mum) %>% pull(mum) %>% as.character()#16 mums of daughters
+mumM<-mjdf %>% filter(sex == "M") %>% distinct(mum) %>% pull(mum) %>% as.character()#19 mums of sons
+length(mumF)
+length(mumM)
+sum(mumF%in% mumM) # overlap
+
+#use GAM to compare mother behavior by sex bc mothers are repeated measure
+mom_behavior <- c("1. near", "2. grooming","")
+mom_partner <- c("1. any partner", "2. peers", "3. offspring")
+mom_labels <- data.frame(behavior = mom_behavior, partner = mom_partner) %>%
+  complete(partner,behavior) %>%
+  filter(behavior!="")
+
+#any partner
+sex_rc_not_juv <- gamlss(fy.m.p.rc_not_juv ~ sex + random(mum), data=mjdf, family="BE") # mothers of males almost spent less time in prox of other any partner - odd! and spend more time w own son...
+sex_gg_not_juv <- gamlss(fy.m.p.gg_not_juv ~ sex + random(mum), data=mjdf, family="BE")
+#peers
+sex_rc_peers <- gamlss(fy.p.rc.af ~ sex + random(mum), data=mjdf, family="BE")# mothers of males almost spent less time in prox of other any partner - odd! and spend more time w own son...
+sex_gg_peers <- gamlss(fy.p.gg.af ~ sex + random(mum), data=mjdf, family="BE")
+#juv infant
+sex_rc_mj <- gamlss(fy.mj.rc ~ sex + random(mum), data=mjdf, family="BE")
+sex_gg_mj <- gamlss(fy.mj.gg ~ sex + random(mum), data=mjdf, family="BE")
+
+mom_mods <- list(sex_rc_not_juv, sex_gg_not_juv, sex_rc_peers, sex_gg_peers, sex_rc_mj, sex_gg_mj)
+
+mom_mod.info<-vector("list",length=length(mom_mods))
+
+for(j in seq(mom_mods)){
+  m<-mom_mods[[j]]
+  info1<-setNames(data.frame(coefs=coef(m), confint(m),
+                             confint(m,level = 1 - 0.05/6*2)), # know from regular confint that 3 are selected
+                  c("coefs","loCI","upCI","consloCI","consupCI")) 
+  info2<- info1 %>%
+    round(.,2) %>%
+    mutate(pred = rownames(.), se = round((upCI-coefs)/1.96, 2)) %>%
+    filter(pred == "sexM") %>%
+    unite(loCI, upCI, col = "CI", sep = ", ") %>%
+    mutate(CI = paste("[", CI, "]", sep="")) %>%
+    unite(consloCI, consupCI, col = "cons_CI", sep = ", ") %>%
+    mutate(cons_CI = paste("[", cons_CI, "]", sep="")) 
+  
+  info <- data.frame(mom_labels[j,], info2) %>%
+    select(behavior, partner, pred, everything())
+  mom_mod.info[[j]]<-info
+}
+
+M_F_mom_diffs <- do.call("rbind", mom_mod.info) %>%
+  arrange(behavior)
+
+M_F_mom_diffs
+
 ########
 # First-year models: relationship bt juv sociliaty and mother's sociality in juv's first year of life
 ########
