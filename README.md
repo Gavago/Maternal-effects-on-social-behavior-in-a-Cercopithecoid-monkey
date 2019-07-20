@@ -15,6 +15,8 @@ Data dictionary: <br />
 *j.p.rc* - time subject spent resting within 1 m or sitting in contact with any social partner, excluding its mother, as a juvenile <br />
 *j.p.pl* - time subject spent playing with any social partner, excluding its mother, as a juvenile <br />
 *jm.gg* - time subject spent grooming w mum as a juvenile <br />
+*jm.gg* - time subject spent resting in 1 m or sitting in contact w mum as a juvenile <br />
+*jm.rc* - time that juvenile spent resting within 1 m or sitting in contact w mother as a juvenile <br />
 *p.gg.j* - time subject spent grooming with (grooming + groomed by) juvenile peers <br />
 *p.rc.j* - time subject spent resting within 1 m or sitting in contact with juvenile peers <br />
 *p.pl.j* - time subject spent playing with juvenile peers <br />
